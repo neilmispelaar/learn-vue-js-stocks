@@ -1,5 +1,6 @@
 <template>
   <div class="invest">
+    <PageHeading>Invest your money</PageHeading>
     <div class="bg-blue-100 border border-gray-400 rounded-sm p-4 shadow-xl mb-4">
       <p>Cash balance: <span class="font-bold">{{ balance | formatCurrency }}</span></p>
     </div>
@@ -23,6 +24,7 @@
 
 <script>
 // @ is an alias to /src
+import PageHeading from '@/components/PageHeading.vue'
 import Stock from '@/components/InvestStock.vue'
 
 export default {
@@ -40,7 +42,8 @@ export default {
     }
   },
   components: {
-    Stock
+    Stock,
+    PageHeading
   }
 }
 
