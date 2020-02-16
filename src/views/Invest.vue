@@ -2,7 +2,7 @@
   <div class="invest">
     <PageHeading>Invest your money</PageHeading>
     <div class="bg-blue-100 border border-gray-400 rounded-sm p-4 shadow-xl mb-4">
-      <p>Cash balance: <span class="font-bold">{{ balance | formatCurrency }}</span></p>
+      <p>Portfolio value: <span class="font-bold">{{ balance | formatCurrency }}</span></p>
     </div>
     <div v-if="stocks.length <= 0" class="text-center">
       <p class="h3 mt-3">No Stocks</p>

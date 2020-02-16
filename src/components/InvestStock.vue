@@ -51,12 +51,11 @@ export default {
   },
   methods: {
     buyShares: function () {
-      const order = {
+      console.log('Trying to buy stocks...')
+      this.$store.dispatch('buyStocks', {
         stockId: this.stock.id,
-        stockPrice: this.stock.price,
-        stockQuantity: this.quantity
-      }
-      console.log(order)
+        quantity: Number(this.quantity)
+      })
       // Return quantity back to zero
       this.quantity = 0
     }

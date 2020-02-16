@@ -49,8 +49,60 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    // Increment Portfolio Holdings
+    // Payload provides the stock id and the
+    // quantity to increment
+    incrementHoldings: function (state, payload) {
+      // Check if the stock id exists in the holdings already
+      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
+      // If the stock is owned just increment the quantity else add new holding entry
+      if (index === -1) {
+        state.portfolio.holdings.push(
+          {
+            stockId: payload.stockId,
+            quantity: payload.quantity
+          }
+        )
+      } else {
+        state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity += payload.quantity
+      }
+    },
+    // Decrement Portfolio Holdings
+    // Payload provides the stock id and the
+    // quantity to decrement
+    decrementHoldings: function (state, payload) {
+      // Check if the stock id exists in the holdings already
+      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
+      // If the stock is owned just increment the quantity else add new holding entry
+      if (index === -1) {
+        state.portfolio.holdings.push(
+          {
+            stockId: payload.stockId,
+            quantity: payload.quantity
+          }
+        )
+      } else {
+        state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity -= payload.quantity
+      }
+    }
   },
   actions: {
+    buyStocks ({ commit }, payload) {
+      console.log('Payload:')
+      console.log(payload)
+      commit('incrementHoldings', {
+        stockId: payload.stockId,
+        quantity: payload.quantity
+      })
+    },
+    sellStocks ({ commit }, payload) {
+      console.log('Payload:')
+      console.log(payload)
+      commit('decrementHoldings', {
+        stockId: payload.stockId,
+        quantity: payload.quantity
+      })
+    }
   },
   getters: {
     stocks: function (state) {
@@ -82,9 +134,16 @@ export default new Vuex.Store({
     getCashBalance: function (state) {
       return state.portfolio.balance
     },
+    // Get the stock that has this id
+    getStockById: (state) => (id) => {
+      return state.stocks.find(stock => stock.id === id)
+    },
     // Get the stock price that has this id
     getStockPriceById: (state) => (id) => {
       return state.stocks.find(stock => stock.id === id).price
+    },
+    getHoldings: function (state) {
+      return state.portfolio.holdings
     }
   },
   modules: {
