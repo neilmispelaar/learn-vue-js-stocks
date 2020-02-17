@@ -1,10 +1,10 @@
 <template>
   <div class="portfolio">
     <PageHeading>Your Portfolio</PageHeading>
-    <div class="bg-blue-100 border border-gray-400 rounded-lg p-4 shadow-xl mb-4 flex flex-wrap justify-between">
+    <div class="bg-blue-100 rounded-lg p-4 shadow-xl mb-4 flex flex-wrap justify-between">
       <p class="w-full text-center text-4xl my-6 font-thin">You have {{ portfolioValue | formatCurrency }}</p>
       <p class="text-sm">Cash balance: <span class="font-bold">{{ cashBalance | formatCurrency }}</span></p>
-      <p class="text-sm">Holdings value: <span class="font-bold">{{ portfolioValue | formatCurrency }}</span></p>
+      <p class="text-sm">Holdings value: <span class="font-bold">{{ holdingsValue | formatCurrency }}</span></p>
     </div>
     <h2 class="sr-only">Stocks</h2>
     <div
@@ -40,18 +40,18 @@ export default {
   },
   computed: {
     holdings: function () {
-      console.log()
       return this.$store.getters.getHoldings
     },
     stocks: function () {
       return this.$store.getters.stocks
     },
     cashBalance: function () {
-      console.log('Balance ' + this.$store.getters.getCashBalance)
       return this.$store.getters.getCashBalance
     },
+    holdingsValue: function () {
+      return this.$store.getters.getHoldingsValue
+    },
     portfolioValue: function () {
-      console.log('Portfolio Value ' + this.$store.getters.portfolioValue)
       return this.$store.getters.portfolioValue
     }
   },

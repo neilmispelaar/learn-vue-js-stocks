@@ -1,8 +1,8 @@
 <template>
-  <div class="w-full border border-teal-200 bg-teal-100 rounded-lg shadow-lg my-5 p-5">
+  <div class="w-full bg-gray-100 rounded-xl rounded-lg my-10 p-5">
     <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stock.name }}</h1>
     <p class="text-6xl font-thin"><span class="sr-only">Value </span>{{ value | formatCurrency }}</p>
-    <p class="text-xs border-b">{{ stock.price | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
+    <p class="text-xs border-b border-gray-300">{{ stock.price | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
     <div class="flex flex-wrap w-full mt-3">
       <div class="w-full">
         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
@@ -52,12 +52,11 @@ export default {
   },
   methods: {
     sellShares: function () {
-      const order = {
+      console.log('Trying to sell stocks...')
+      this.$store.dispatch('sellStocks', {
         stockId: this.stock.id,
-        stockPrice: this.stock.price,
-        stockQuantity: this.quantity
-      }
-      console.log(order)
+        quantity: Number(this.quantity)
+      })
       // Return quantity back to zero
       this.quantity = 0
     }

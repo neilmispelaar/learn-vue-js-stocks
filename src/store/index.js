@@ -5,6 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    time: {
+      currentDay: 0
+    },
     portfolio: {
       balance: 10000,
       holdings: [
@@ -49,6 +52,22 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    // Increment Date
+    incrementDay: function (state) {
+      state.time.currentDay++
+    },
+    // Increment Portfolio Holdings
+    // Payload provides the stock id and the
+    // quantity to increment
+    incrementBalance: function (state, payload) {
+      state.portfolio.balance += payload.value
+    },
+    // Increment Portfolio Holdings
+    // Payload provides the stock id and the
+    // quantity to increment
+    decrementBalance: function (state, payload) {
+      state.portfolio.balance -= payload.cost
+    },
     // Increment Portfolio Holdings
     // Payload provides the stock id and the
     // quantity to increment
@@ -82,26 +101,47 @@ export default new Vuex.Store({
           }
         )
       } else {
-        state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity -= payload.quantity
+        // Decrement the holding
+        // If the holding is now at 0 then remove the entry
+        if ((state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity -= payload.quantity) === 0) {
+          state.portfolio.holdings.splice(index, 1)
+        }
       }
     }
   },
   actions: {
-    buyStocks ({ commit }, payload) {
-      console.log('Payload:')
-      console.log(payload)
-      commit('incrementHoldings', {
-        stockId: payload.stockId,
-        quantity: payload.quantity
-      })
+    buyStocks ({ commit, state }, payload) {
+      // Does the user have enough money to buy the stock
+      var cost
+      cost = payload.quantity * state.stocks.find(stock => stock.id === payload.stockId).price
+      // Check if there is enough money to purchase the stock
+      if (cost <= state.portfolio.balance) {
+        // Add the stocks to the state
+        commit('incrementHoldings', {
+          stockId: payload.stockId,
+          quantity: payload.quantity
+        })
+        // Decrement the cash balance
+        commit('decrementBalance', {
+          cost: cost
+        })
+      }
     },
-    sellStocks ({ commit }, payload) {
-      console.log('Payload:')
-      console.log(payload)
+    sellStocks ({ commit, state }, payload) {
+      // How much value do the stocks have
+      var value
+      value = payload.quantity * state.stocks.find(stock => stock.id === payload.stockId).price
       commit('decrementHoldings', {
         stockId: payload.stockId,
         quantity: payload.quantity
       })
+      // Increment the cash balance
+      commit('incrementBalance', {
+        value: value
+      })
+    },
+    incrementDay ({ commit, state }, payload) {
+      commit('incrementDay')
     }
   },
   getters: {
@@ -144,6 +184,19 @@ export default new Vuex.Store({
     },
     getHoldings: function (state) {
       return state.portfolio.holdings
+    },
+    getHoldingsValue: function (state, getters) {
+      var total = 0
+      state.portfolio.holdings.forEach(function (holding) {
+        var value = 0
+        value = holding.quantity * getters.getStockPriceById(holding.stockId)
+        total += value
+      })
+      return total
+    },
+    // Return the current Day counter
+    getCurrentDay: function (state) {
+      return state.time.currentDay
     }
   },
   modules: {
