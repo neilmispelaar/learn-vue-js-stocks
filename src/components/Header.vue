@@ -29,7 +29,7 @@
                 >Invest</router-link>
             </div>
             <div>
-              <span class="text-white text-sm mr-5">Day {{ currentDay }}</span>
+              <span class="text-white text-xs mr-5">Day {{ currentDay }}</span>
               <button
                 v-on:click="incrementDay"
                 class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Next Day</button>
