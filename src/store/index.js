@@ -56,6 +56,30 @@ export default new Vuex.Store({
     incrementDay: function (state) {
       state.time.currentDay++
     },
+    // Modify stock price
+    // Provide
+    // stock id,
+    // percentage change
+    // loss or gain
+    modifyStockPriceByPercentage: function (state, payload) {
+      // Check if the stock id exists in the holdings already
+      var index = state.stocks.findIndex(stock => stock.id === payload.stockId)
+
+      if (index !== -1) {
+        switch (payload.direction) {
+          case true:
+            // code block
+            state.stocks[index].price = state.stocks[index].price + (state.stocks[index].price * (payload.percentageChange / 100))
+            break
+          case false:
+            // code block
+            state.stocks[index].price = state.stocks[index].price - (state.stocks[index].price * (payload.percentageChange / 100))
+            break
+          default:
+            // code block
+        }
+      }
+    },
     // Increment Portfolio Holdings
     // Payload provides the stock id and the
     // quantity to increment
@@ -141,7 +165,49 @@ export default new Vuex.Store({
       })
     },
     incrementDay ({ commit, state }, payload) {
+      // Advance the day counter
       commit('incrementDay')
+      // Update stock prices
+      state.stocks.forEach(function (stock) {
+        // Get a random number between 0 and 100
+        // If the number is 95 and above then its a really
+        // good or bad day
+        // Else if the number is under 95 then its a normal day
+        // Get a random number that is from 0 to 15 percent
+        // Get a random number that is either 0 or 1
+        // to determine if it is a loss or a gain
+        // Stock prices can't go to zero
+        // Calculate the loss or gain of the stock
+
+        // Extreme or normal
+        var extreme = false
+        var percentageChange = 0
+        var direction = true
+
+        if (Math.floor(Math.random() * Math.floor(100)) > 95) {
+          extreme = true
+        }
+
+        // Calculate positive or negative change
+        if (Math.floor(Math.random() * Math.floor(2)) === 1) {
+          direction = false
+        }
+
+        // Calculate percentage change
+        if (extreme) {
+          percentageChange = Math.floor(Math.random() * Math.floor(50))
+        } else {
+          percentageChange = Math.floor(Math.random() * Math.floor(15))
+        }
+
+        // Commit the change to the stock price
+        commit('modifyStockPriceByPercentage', {
+          stockId: stock.id,
+          direction: direction,
+          percentageChange: percentageChange
+
+        })
+      })
     }
   },
   getters: {
