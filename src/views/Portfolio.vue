@@ -1,7 +1,17 @@
 <template>
   <div class="portfolio">
     <PageHeading>Your Portfolio</PageHeading>
-    <div class="bg-blue-100 rounded-lg p-4 shadow-xl mb-4 flex flex-wrap justify-between">
+    <div class="bg-white p-6 mb-10 rounded-lg">
+      <h2>Earnings</h2>
+      <trend
+        :data="[0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0, 20]"
+        :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
+        auto-draw
+        smooth
+      >
+      </trend>
+    </div>
+    <div class="bg-blue-100 rounded-lg p-4 shadow-xl mt-0 mb-4 flex flex-wrap justify-between">
       <p class="w-full text-center text-4xl my-6 font-thin">You have {{ portfolioValue | formatCurrency }}</p>
       <p class="text-sm">Cash balance: <span class="font-bold">{{ cashBalance | formatCurrency }}</span></p>
       <p class="text-sm">Holdings value: <span class="font-bold">{{ holdingsValue | formatCurrency }}</span></p>

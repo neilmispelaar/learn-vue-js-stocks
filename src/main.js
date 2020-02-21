@@ -2,11 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Trend from 'vuetrend'
 
 /* Import project styles */
 import './assets/styles/main.css'
 
 Vue.config.productionTip = false
+
+/* Trend Graph */
+Vue.use(Trend)
 
 Vue.filter('formatCurrency', function (value) {
   if (typeof value !== 'number') {

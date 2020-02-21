@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
+
+body {
+    /* Smooth out the fonts */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Set the background colour */
+    background-color: theme('colors.mint-cream');
+
+    /* Set the default text colour */ 
+    color: theme('colors.gray.700');
+}
+
 @tailwind utilities;
+

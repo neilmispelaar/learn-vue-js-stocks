@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <h1 class="text-2xl border-b mb-5"><slot></slot></h1>
+  <div class="bg-celadon-green rounded-lg p-4 my-10">
+    <h1 class="text-white font-semibold text-xl"><slot></slot></h1>
   </div>
 </template>
