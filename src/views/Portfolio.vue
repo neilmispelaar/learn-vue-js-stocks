@@ -22,6 +22,8 @@
           v-bind:key="index"
           v-bind:holding="holding"
           v-bind:stock="getStockById(holding.stockId)"
+          v-bind:stock-price="getStockPriceById(holding.stockId)"
+          v-bind:stock-name="getStockName(holding.stockId)"
         ></PortfolioStock>
       </div>
     </div>
@@ -58,6 +60,12 @@ export default {
   methods: {
     getStockById: function (id) {
       return this.$store.getters.getStockById(id)
+    },
+    getStockName: function (id) {
+      return this.$store.getters.getStockName(id)
+    },
+    getStockPriceById: function (id) {
+      return this.$store.getters.getStockPriceById(id)
     }
   },
   components: {

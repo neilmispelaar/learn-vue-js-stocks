@@ -1,8 +1,8 @@
 <template>
   <div class="w-1/2 px-4 py-4">
     <div class="bg-blue-100  border border-gray-400 rounded-sm p-4 shadow-xl">
-      <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stock.name }}</h1>
-      <p class="text-6xl"><span class="sr-only">Price: </span>{{ stock.price | formatCurrency }}</p>
+      <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
+      <p class="text-6xl"><span class="sr-only">Price: </span>{{ stockPrice | formatCurrency }}</p>
       <div class="flex flex-wrap w-full">
         <div class="w-full">
           <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
@@ -53,7 +53,7 @@ export default {
     buyShares: function () {
       console.log('Trying to buy stocks...')
       this.$store.dispatch('buyStocks', {
-        stockId: this.stock.id,
+        stockId: this.stockId,
         quantity: Number(this.quantity)
       })
       // Return quantity back to zero
@@ -62,8 +62,16 @@ export default {
   },
   props: {
     // Number with a default value
-    stock: {
-      type: Object,
+    stockId: {
+      type: Number,
+      required: true
+    },
+    stockName: {
+      type: String,
+      required: true
+    },
+    stockPrice: {
+      type: Number,
       required: true
     }
   }

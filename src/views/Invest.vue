@@ -15,7 +15,9 @@
           v-bind:item="stock"
           v-bind:index="index"
           v-bind:key="index"
-          v-bind:stock="stock"
+          v-bind:stockId="stock.id"
+          v-bind:stockName="stock.name"
+          v-bind:stockPrice="stock.prices[stock.prices.length - 1]"
         ></Stock>
       </div>
     </div>

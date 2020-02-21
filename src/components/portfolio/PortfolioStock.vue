@@ -1,8 +1,8 @@
 <template>
   <div class="w-full bg-gray-100 rounded-xl rounded-lg my-10 p-5">
-    <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stock.name }}</h1>
+    <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
     <p class="text-6xl font-thin"><span class="sr-only">Value </span>{{ value | formatCurrency }}</p>
-    <p class="text-xs border-b border-gray-300">{{ stock.price | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
+    <p class="text-xs border-b border-gray-300">{{ stockPrice | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
     <div class="flex flex-wrap w-full mt-3">
       <div class="w-full">
         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
@@ -47,7 +47,7 @@ export default {
       return disabled
     },
     value: function () {
-      return this.stock.price * this.holding.quantity
+      return this.stock.prices[this.stock.prices.length - 1] * this.holding.quantity
     }
   },
   methods: {
@@ -63,7 +63,15 @@ export default {
   },
   props: {
     holding: Object,
-    stock: Object
+    stock: Object,
+    stockName: {
+      type: String,
+      required: true
+    },
+    stockPrice: {
+      type: Number,
+      default: 0
+    }
   }
 }
 </script>

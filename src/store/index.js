@@ -32,22 +32,30 @@ export default new Vuex.Store({
       {
         id: 0,
         name: 'BMW',
-        price: 20
+        prices: [
+          20
+        ]
       },
       {
         id: 1,
         name: 'Mercedes',
-        price: 50
+        prices: [
+          30
+        ]
       },
       {
         id: 2,
         name: 'Ford',
-        price: 30
+        prices: [
+          40
+        ]
       },
       {
         id: 3,
         name: 'Tesla',
-        price: 30
+        prices: [
+          40
+        ]
       }
     ]
   },
@@ -55,6 +63,33 @@ export default new Vuex.Store({
     // Increment Date
     incrementDay: function (state) {
       state.time.currentDay++
+    },
+    // Modify stock price
+    // Provide
+    // stock id,
+    // percentage change
+    // loss or gain
+    addNewStockPrice: function (state, payload) {
+      // Check if the stock id exists in the holdings already
+      var index = state.stocks.findIndex(stock => stock.id === payload.stockId)
+      var newPrice
+      if (index !== -1) {
+        var yesterday = state.stocks[index].prices.length - 1
+        switch (payload.direction) {
+          case true:
+            // code block
+            newPrice = state.stocks[index].prices[yesterday] + (state.stocks[index].prices[yesterday] * (payload.percentageChange / 100))
+            break
+          case false:
+            // code block
+            newPrice = state.stocks[index].prices[yesterday] - (state.stocks[index].prices[yesterday] * (payload.percentageChange / 100))
+            break
+          default:
+            // code block
+        }
+        // Add the new price to the array of prices
+        state.stocks[index].prices.push(newPrice)
+      }
     },
     // Modify stock price
     // Provide
@@ -201,7 +236,7 @@ export default new Vuex.Store({
         }
 
         // Commit the change to the stock price
-        commit('modifyStockPriceByPercentage', {
+        commit('addNewStockPrice', {
           stockId: stock.id,
           direction: direction,
           percentageChange: percentageChange
@@ -244,9 +279,13 @@ export default new Vuex.Store({
     getStockById: (state) => (id) => {
       return state.stocks.find(stock => stock.id === id)
     },
+    // Get the stock that has this id
+    getStockName: (state) => (id) => {
+      return state.stocks.find(stock => stock.id === id).name
+    },
     // Get the stock price that has this id
     getStockPriceById: (state) => (id) => {
-      return state.stocks.find(stock => stock.id === id).price
+      return state.stocks.find(stock => stock.id === id).prices[state.time.currentDay]
     },
     getHoldings: function (state) {
       return state.portfolio.holdings
