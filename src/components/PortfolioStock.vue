@@ -16,7 +16,7 @@
         <button
         class="bg-red-600 hover:bg-red-800 text-white font-bold py-3 px-8 rounded"
         :disabled="disabled"
-        v-on:click="sellShares">
+        v-on:click="sellStocks">
         Sell</button>
       </div>
     </div>
@@ -61,8 +61,9 @@ export default {
 
   },
   methods: {
-    sellShares: function () {
+    sellStocks: function () {
       console.log('Trying to sell stocks...')
+      console.log('Quantityss: ' + Number(this.quantity))
       this.$store.dispatch('sellStocks', {
         stockId: this.stock.id,
         quantity: Number(this.quantity)

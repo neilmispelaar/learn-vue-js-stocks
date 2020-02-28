@@ -20,7 +20,6 @@ export default new Vuex.Store({
       },
 
       holdings: [
-        /*
         {
           stockId: 0,
           quantity: 5
@@ -29,7 +28,6 @@ export default new Vuex.Store({
           stockId: 2,
           quantity: 10
         }
-        */
       ],
 
       transactions: [
@@ -87,7 +85,12 @@ export default new Vuex.Store({
 
     // Add money to the cash balance
     addToCashBalance: function (state, payload) {
-      state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1] += payload.value
+      // Calculate the new balance
+      var newCashBalance = state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1] + payload.value
+      Vue.set(
+        state.portfolio.balances.cash,
+        state.portfolio.balances.cash.length - 1,
+        newCashBalance)
     },
 
     // Remove money from the cash balance
@@ -123,9 +126,24 @@ export default new Vuex.Store({
       }
     },
 
-    // Add money to the cash balance
+    // Remove stocks from the holdings object
     removeFromHoldings: function (state, payload) {
-
+      // Check if the stock id exists in the holdings already
+      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
+      // If the stock is owned just decrement the quantity else add new holding entry
+      if (index !== -1) {
+        var newQuantity = state.portfolio.holdings[index].quantity - payload.quantity
+        // If the holding quantity will be 0 then just remove the entry otherwise modify the entry
+        if (newQuantity === 0) {
+          state.portfolio.holdings.splice(index, 1)
+        } else {
+          // Setting arrays isn't reactive so we use the set function to update the state
+          Vue.set(
+            state.portfolio.holdings[index],
+            'quantity',
+            newQuantity)
+        }
+      }
     },
 
     // When you buy or sell stocks
@@ -232,17 +250,25 @@ export default new Vuex.Store({
     // Remove the stocks from their portfolio
     // Add the cash to their cash balance
     sellStocks ({ commit, state }, payload) {
-      // How much value do the stocks have
-      var value
-      value = payload.quantity * state.stocks.find(stock => stock.id === payload.stockId).price
-      commit('decrementHoldings', {
-        stockId: payload.stockId,
-        quantity: payload.quantity
-      })
-      // Increment the cash balance
-      commit('incrementBalance', {
-        value: value
-      })
+      // Check if the stock id exists
+      var stockIndex = state.stocks.findIndex(stock => stock.id === payload.stockId)
+      if (stockIndex !== -1) {
+        // Remove the shares from the portfolio holdings array
+        commit('removeFromHoldings', {
+          stockId: payload.stockId,
+          quantity: payload.quantity
+        })
+        // How much value do the stocks have
+        var value
+        value = payload.quantity * state.stocks[stockIndex].prices[state.stocks[stockIndex].prices.length - 1]
+        console.log('Quanitty:' + value)
+        // Increment the cash balance
+        commit('addToCashBalance', {
+          value: value
+        })
+        // Update the holdings value balance
+        commit('updateHoldingsValue')
+      }
     },
 
     // Go to the next day
