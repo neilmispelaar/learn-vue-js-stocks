@@ -128,10 +128,10 @@ export default new Vuex.Store({
 
     },
 
-    // Commit the portfolio balances
-    // Add new entries in the arry with the
-    // previous days values
-    commitPortfolioBalances: function (state) {
+    // When you buy or sell stocks
+    // you need to update the current days
+    // holdings values iin the balance object
+    updateHoldingsValue: function (state) {
       // Calculate the value of the current days stocks and then push them onto the array
       var total = 0
       // Add the value of the stocks at the current prices on the holdings balance array
@@ -140,8 +140,20 @@ export default new Vuex.Store({
         value = holding.quantity * state.stocks.find(stock => stock.id === holding.stockId).prices[state.day]
         total += value
       })
+      // Setting arrays isn't reactive so we use the set function to update the state
+      Vue.set(
+        state.portfolio.balances.holdings,
+        state.portfolio.balances.holdings.length - 1,
+        total)
+    },
+
+    // Commit the portfolio balances
+    // Add new entries in the arry with the
+    // previous days values
+    commitPortfolioBalances: function (state) {
+      // Add a new entry for the holdings array
       state.portfolio.balances.holdings.push(
-        total
+        state.portfolio.balances.holdings[state.portfolio.balances.holdings.length - 1]
       )
       // Add a new entry for the cash array
       state.portfolio.balances.cash.push(
@@ -210,6 +222,8 @@ export default new Vuex.Store({
           commit('removeFromCashBalance', {
             value: cost
           })
+          // Update the holdings value balance
+          commit('updateHoldingsValue')
         }
       }
     },
@@ -281,6 +295,9 @@ export default new Vuex.Store({
           percentageChange: percentageChange
 
         })
+
+        // Update the holdings value balance
+        commit('updateHoldingsValue')
       })
     }
 
