@@ -29,7 +29,7 @@
                 >Invest</router-link>
             </div>
             <div>
-              <span class="text-xs mr-5">Day {{ currentDay }}</span>
+              <span class="text-xs mr-5">Day {{ day }}</span>
               <button
                 v-on:click="incrementDay"
                 class="inline-block text-sm px-4 py-2 leading-none border rounded border-verdigris hover:border-transparent hover:text-teal-500 hover:bg-anti-flash-white mt-4 lg:mt-0">Next Day</button>
@@ -44,13 +44,13 @@
 <script>
 export default {
   computed: {
-    currentDay: function () {
-      return this.$store.getters.getCurrentDay
+    day: function () {
+      return this.$store.getters.getDay
     }
   },
   methods: {
     incrementDay: function () {
-      this.$store.dispatch('incrementDay')
+      this.$store.dispatch('nextDay')
     }
   }
 }

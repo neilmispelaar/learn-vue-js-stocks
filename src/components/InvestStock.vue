@@ -1,24 +1,40 @@
 <template>
-  <div class="w-1/2 px-4 py-4">
-    <div class="bg-blue-100  border border-gray-400 rounded-sm p-4 shadow-xl">
-      <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
-      <p class="text-6xl"><span class="sr-only">Price: </span>{{ stockPrice | formatCurrency }}</p>
-      <div class="flex flex-wrap w-full">
-        <div class="w-full">
-          <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
-            Buy shares
-          </label>
-        </div>
-        <div class="flex-grow mr-3">
-          <input v-model="quantity" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" placeholder="0" min="0" max="100">
-        </div>
-        <div class="self-center">
-          <button
+  <div class="w-full bg-orange-300 text-orange-900 rounded-xl rounded-lg my-5 p-5">
+    <div class="flex flex-row flex-no-wrap">
+      <div class="w-1/2">
+        <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
+        <p class="text-6xl"><span class="sr-only">Price: </span>{{ stockPrice | formatCurrency }}</p>
+        <p class="text-xs"><span class="sr-only">Price Change: </span>{{ stockPriceChange | formatCurrency }}</p>
+        <p class="text-6xl font-thin"><span class="sr-only">Value </span></p>
+      </div>
+      <div class="w-1/2">
+        <trend
+          :data="stockPrices"
+          :gradient="['#22543d', '#48bb78', '#7b341e']"
+          :height="125"
+          :stroke-width="2"
+          auto-draw
+          smooth
+        >
+        </trend>
+      </div>
+    </div>
+    <div class="flex flex-wrap w-full mt-3 bg-orange-200 rounded p-4">
+      <div class="w-full">
+        <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
+          Buy shares
+        </label>
+      </div>
+      <div class="flex-grow mr-3">
+        <input v-model="quantity" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" placeholder="0" min="0" >
+      </div>
+      <div class="self-center">
+        <button
           class="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-8 rounded"
           :disabled="disabled"
           v-on:click="buyShares">
-          Buy</button>
-        </div>
+          Buy
+        </button>
       </div>
     </div>
   </div>
@@ -33,6 +49,7 @@ export default {
     }
   },
   computed: {
+
     disabled: function () {
       var disabled = true
       if (isNaN(this.quantity)) {
@@ -47,11 +64,24 @@ export default {
         }
       }
       return disabled
+    },
+
+    stockPrice: function () {
+      return this.stockPrices[this.stockPrices.length - 1]
+    },
+
+    stockPriceChange: function () {
+      var change = 0
+      if (this.stockPrices.length > 1) {
+        change = this.stockPrices[this.stockPrices.length - 1] - this.stockPrices[this.stockPrices.length - 2]
+      }
+      return change
     }
+
   },
   methods: {
+
     buyShares: function () {
-      console.log('Trying to buy stocks...')
       this.$store.dispatch('buyStocks', {
         stockId: this.stockId,
         quantity: Number(this.quantity)
@@ -59,6 +89,7 @@ export default {
       // Return quantity back to zero
       this.quantity = 0
     }
+
   },
   props: {
     // Number with a default value
@@ -70,8 +101,8 @@ export default {
       type: String,
       required: true
     },
-    stockPrice: {
-      type: Number,
+    stockPrices: {
+      type: Array,
       required: true
     }
   }

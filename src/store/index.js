@@ -5,12 +5,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    time: {
-      currentDay: 0
-    },
+
+    day: 0,
+
     portfolio: {
-      balance: 10000,
+
+      balances: {
+        cash: [
+          0
+        ],
+        holdings: [
+          0
+        ]
+      },
+
       holdings: [
+        /*
         {
           stockId: 0,
           quantity: 5
@@ -19,7 +29,9 @@ export default new Vuex.Store({
           stockId: 2,
           quantity: 10
         }
+        */
       ],
+
       transactions: [
         {
           stockId: 0,
@@ -28,6 +40,7 @@ export default new Vuex.Store({
         }
       ]
     },
+
     stocks: [
       {
         id: 0,
@@ -57,19 +70,91 @@ export default new Vuex.Store({
           40
         ]
       }
-    ]
+    ],
+
+    initial: {
+      cashBalance: 10000
+    }
+
   },
+
   mutations: {
+
     // Increment Date
     incrementDay: function (state) {
-      state.time.currentDay++
+      state.day++
     },
+
+    // Add money to the cash balance
+    addToCashBalance: function (state, payload) {
+      state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1] += payload.value
+    },
+
+    // Remove money from the cash balance
+    removeFromCashBalance: function (state, payload) {
+      // Calculate the new balance
+      var newCashBalance = state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1] - payload.value
+      Vue.set(
+        state.portfolio.balances.cash,
+        state.portfolio.balances.cash.length - 1,
+        newCashBalance)
+    },
+
+    // Add stocks to the holdings object
+    addToHoldings: function (state, payload) {
+      // Check if the stock id exists in the holdings already
+      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
+      if (index === -1) {
+        // If the stock is not owned push a new object
+        state.portfolio.holdings.push(
+          {
+            stockId: payload.stockId,
+            quantity: payload.quantity
+          }
+        )
+      } else {
+        // If the stock is owned already just increment the quantity else add new holding entry
+        // Use vue set
+        var newStockAmount = state.portfolio.holdings[index].quantity + payload.quantity
+        Vue.set(
+          state.portfolio.holdings[index],
+          'quantity',
+          newStockAmount)
+      }
+    },
+
+    // Add money to the cash balance
+    removeFromHoldings: function (state, payload) {
+
+    },
+
+    // Commit the portfolio balances
+    // Add new entries in the arry with the
+    // previous days values
+    commitPortfolioBalances: function (state) {
+      // Calculate the value of the current days stocks and then push them onto the array
+      var total = 0
+      // Add the value of the stocks at the current prices on the holdings balance array
+      state.portfolio.holdings.forEach(function (holding) {
+        var value = 0
+        value = holding.quantity * state.stocks.find(stock => stock.id === holding.stockId).prices[state.day]
+        total += value
+      })
+      state.portfolio.balances.holdings.push(
+        total
+      )
+      // Add a new entry for the cash array
+      state.portfolio.balances.cash.push(
+        state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1]
+      )
+    },
+
     // Modify stock price
     // Provide
     // stock id,
     // percentage change
     // loss or gain
-    addNewStockPrice: function (state, payload) {
+    modifyStockPrice: function (state, payload) {
       // Check if the stock id exists in the holdings already
       var index = state.stocks.findIndex(stock => stock.id === payload.stockId)
       var newPrice
@@ -90,102 +175,48 @@ export default new Vuex.Store({
         // Add the new price to the array of prices
         state.stocks[index].prices.push(newPrice)
       }
-    },
-    // Modify stock price
-    // Provide
-    // stock id,
-    // percentage change
-    // loss or gain
-    modifyStockPriceByPercentage: function (state, payload) {
-      // Check if the stock id exists in the holdings already
-      var index = state.stocks.findIndex(stock => stock.id === payload.stockId)
-
-      if (index !== -1) {
-        switch (payload.direction) {
-          case true:
-            // code block
-            state.stocks[index].price = state.stocks[index].price + (state.stocks[index].price * (payload.percentageChange / 100))
-            break
-          case false:
-            // code block
-            state.stocks[index].price = state.stocks[index].price - (state.stocks[index].price * (payload.percentageChange / 100))
-            break
-          default:
-            // code block
-        }
-      }
-    },
-    // Increment Portfolio Holdings
-    // Payload provides the stock id and the
-    // quantity to increment
-    incrementBalance: function (state, payload) {
-      state.portfolio.balance += payload.value
-    },
-    // Increment Portfolio Holdings
-    // Payload provides the stock id and the
-    // quantity to increment
-    decrementBalance: function (state, payload) {
-      state.portfolio.balance -= payload.cost
-    },
-    // Increment Portfolio Holdings
-    // Payload provides the stock id and the
-    // quantity to increment
-    incrementHoldings: function (state, payload) {
-      // Check if the stock id exists in the holdings already
-      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
-      // If the stock is owned just increment the quantity else add new holding entry
-      if (index === -1) {
-        state.portfolio.holdings.push(
-          {
-            stockId: payload.stockId,
-            quantity: payload.quantity
-          }
-        )
-      } else {
-        state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity += payload.quantity
-      }
-    },
-    // Decrement Portfolio Holdings
-    // Payload provides the stock id and the
-    // quantity to decrement
-    decrementHoldings: function (state, payload) {
-      // Check if the stock id exists in the holdings already
-      var index = state.portfolio.holdings.findIndex(holding => holding.stockId === payload.stockId)
-      // If the stock is owned just increment the quantity else add new holding entry
-      if (index === -1) {
-        state.portfolio.holdings.push(
-          {
-            stockId: payload.stockId,
-            quantity: payload.quantity
-          }
-        )
-      } else {
-        // Decrement the holding
-        // If the holding is now at 0 then remove the entry
-        if ((state.portfolio.holdings.find(holding => holding.stockId === payload.stockId).quantity -= payload.quantity) === 0) {
-          state.portfolio.holdings.splice(index, 1)
-        }
-      }
     }
+
   },
+
   actions: {
+
+    // Initialise the state machine
+    init ({ state }) {
+      // set the opening cash balance to the first index
+      state.portfolio.balances.cash[0] = state.initial.cashBalance
+    },
+
+    // Initiate the purchase of stocks
+    // Check if the user has enough money
+    // Add stocks to their portfolio
+    // Remove cash from their cash balance
     buyStocks ({ commit, state }, payload) {
-      // Does the user have enough money to buy the stock
-      var cost
-      cost = payload.quantity * state.stocks.find(stock => stock.id === payload.stockId).price
-      // Check if there is enough money to purchase the stock
-      if (cost <= state.portfolio.balance) {
-        // Add the stocks to the state
-        commit('incrementHoldings', {
-          stockId: payload.stockId,
-          quantity: payload.quantity
-        })
-        // Decrement the cash balance
-        commit('decrementBalance', {
-          cost: cost
-        })
+      // Check if the stock id exists
+      var stockIndex = state.stocks.findIndex(stock => stock.id === payload.stockId)
+      if (stockIndex !== -1) {
+        // Find the current price of the stock
+        var price = state.stocks[stockIndex].prices[state.stocks[stockIndex].prices.length - 1]
+        // Calculat the cost to buy all of the stock
+        var cost = payload.quantity * price
+        // Only buy if there is enough money on hand
+        if (cost <= state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1]) {
+          // Add the stocks to the state
+          commit('addToHoldings', {
+            stockId: payload.stockId,
+            quantity: payload.quantity
+          })
+          // Decrement the cash balance
+          commit('removeFromCashBalance', {
+            value: cost
+          })
+        }
       }
     },
+
+    // Initial the sale of stocks
+    // Remove the stocks from their portfolio
+    // Add the cash to their cash balance
     sellStocks ({ commit, state }, payload) {
       // How much value do the stocks have
       var value
@@ -199,9 +230,17 @@ export default new Vuex.Store({
         value: value
       })
     },
-    incrementDay ({ commit, state }, payload) {
+
+    // Go to the next day
+    // Save the cash and holding balances
+    // Update all of the stock prices
+    nextDay ({ commit, state }) {
+      // Add a new entry to the cash balance and the holding balance
+      commit('commitPortfolioBalances')
+
       // Advance the day counter
       commit('incrementDay')
+
       // Update stock prices
       state.stocks.forEach(function (stock) {
         // Get a random number between 0 and 100
@@ -236,7 +275,7 @@ export default new Vuex.Store({
         }
 
         // Commit the change to the stock price
-        commit('addNewStockPrice', {
+        commit('modifyStockPrice', {
           stockId: stock.id,
           direction: direction,
           percentageChange: percentageChange
@@ -244,66 +283,56 @@ export default new Vuex.Store({
         })
       })
     }
-  },
-  getters: {
-    stocks: function (state) {
-      return state.stocks
-    },
-    balance: function (state) {
-      return state.portfolio.balance
-    },
-    holdingValue: function (state) {
-      // Provide the stock ID and then get back
-      // amount of value that the user has in that
-      // stock
 
-      return 10
+  },
+
+  getters: {
+
+    // Get current cash balances
+    getDay: function (state) {
+      return state.day
     },
-    portfolioValue: function (state, getters) {
-      var total = 0
-      // Get the value of the cash account
-      total += state.portfolio.balance
-      // Add the value of the stocks at the current prices
-      state.portfolio.holdings.forEach(function (holding) {
-        var value = 0
-        value = holding.quantity * getters.getStockPriceById(holding.stockId)
-        total += value
-      })
-      return total
-    },
-    // Get the balance of the cash account
+
+    // Get current cash balances
     getCashBalance: function (state) {
-      return state.portfolio.balance
+      return state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1]
     },
-    // Get the stock that has this id
-    getStockById: (state) => (id) => {
-      return state.stocks.find(stock => stock.id === id)
+
+    // Get Balances
+    getBalances: function (state) {
+      return state.portfolio.balances
     },
-    // Get the stock that has this id
-    getStockName: (state) => (id) => {
-      return state.stocks.find(stock => stock.id === id).name
+
+    // Get Balances
+    getPortfolioBalances: function (state) {
+      var portfolioBalances = []
+      // Walk through the balances and add the cash and the holdings together
+      for (var index = 0; index < state.portfolio.balances.cash.length; index++) {
+        console.log('Portfolio Holding: ' + index + ' ' + state.portfolio.balances.holdings[index])
+        portfolioBalances.push(
+          state.portfolio.balances.cash[index] + state.portfolio.balances.holdings[index]
+        )
+      }
+      return portfolioBalances
     },
-    // Get the stock price that has this id
-    getStockPriceById: (state) => (id) => {
-      return state.stocks.find(stock => stock.id === id).prices[state.time.currentDay]
-    },
+
+    // Get Holdings
     getHoldings: function (state) {
       return state.portfolio.holdings
     },
-    getHoldingsValue: function (state, getters) {
-      var total = 0
-      state.portfolio.holdings.forEach(function (holding) {
-        var value = 0
-        value = holding.quantity * getters.getStockPriceById(holding.stockId)
-        total += value
-      })
-      return total
+
+    // Get Stocks
+    getStocks: function (state) {
+      return state.stocks
     },
-    // Return the current Day counter
-    getCurrentDay: function (state) {
-      return state.time.currentDay
+
+    // Get the stock that has this id
+    getStockById: (state) => (id) => {
+      return state.stocks.find(stock => stock.id === id)
     }
+
   },
+
   modules: {
   }
 })

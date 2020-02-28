@@ -16,7 +16,12 @@ import Header from '@/components/Header.vue'
 export default {
   components: {
     Header
+  },
+
+  created: function () {
+    this.$store.dispatch('init')
   }
+
 }
 </script>
 

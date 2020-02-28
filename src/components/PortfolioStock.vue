@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full bg-gray-100 rounded-xl rounded-lg my-10 p-5">
-    <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
+  <div class="w-full bg-blue-200 rounded-xl rounded-lg my-10 p-5">
+    <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ name }}</h1>
     <p class="text-6xl font-thin"><span class="sr-only">Value </span>{{ value | formatCurrency }}</p>
-    <p class="text-xs border-b border-gray-300">{{ stockPrice | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
-    <div class="flex flex-wrap w-full mt-3">
+    <p class="text-xs">{{ price | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
+    <div class="flex flex-wrap w-full mt-3 bg-blue-100 rounded p-4">
       <div class="w-full">
         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
           Sell shares
@@ -46,9 +46,19 @@ export default {
       }
       return disabled
     },
+
     value: function () {
       return this.stock.prices[this.stock.prices.length - 1] * this.holding.quantity
+    },
+
+    price: function () {
+      return this.stock.prices[this.stock.prices.length - 1]
+    },
+
+    name: function () {
+      return this.stock.name
     }
+
   },
   methods: {
     sellShares: function () {
@@ -63,14 +73,9 @@ export default {
   },
   props: {
     holding: Object,
-    stock: Object,
-    stockName: {
-      type: String,
+    stock: {
+      type: Object,
       required: true
-    },
-    stockPrice: {
-      type: Number,
-      default: 0
     }
   }
 }
