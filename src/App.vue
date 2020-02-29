@@ -37,7 +37,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+body {
+    /* Smooth out the fonts */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Set the background colour */
+    background-color: theme('colors.mint-cream');
+
+    /* Set the default text colour */
+    color: theme('colors.gray.700');
+}
 
 .view-enter-active, .view-leave-active {
   transition: all 0.2s ease-in;
