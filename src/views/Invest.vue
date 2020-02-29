@@ -2,7 +2,12 @@
   <div class="invest">
     <PageHeading>Invest your money</PageHeading>
     <div class="bg-white p-6 mb-10 rounded-lg">
-      <p class="text-celadon-green font-semibold text-sm">Cash Balance: <span class="font-bold">{{ cashBalance | formatCurrency }}</span></p>
+      <p
+        class="text-celadon-green font-semibold text-sm">Cash Balance:
+        <transition name="fade" mode='out-in'>
+        <span v-bind:key="cashBalance" class="font-bold">{{ cashBalance | formatCurrency }}</span>
+        </transition>
+      </p>
     </div>
     <div v-if="stocks.length <= 0" class="text-center">
       <p class="h3 mt-3">No Stocks</p>
@@ -54,3 +59,15 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s;
+}
+</style>
