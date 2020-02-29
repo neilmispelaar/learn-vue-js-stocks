@@ -20,14 +20,6 @@ export default new Vuex.Store({
       },
 
       holdings: [
-        {
-          stockId: 0,
-          quantity: 5
-        },
-        {
-          stockId: 2,
-          quantity: 10
-        }
       ],
 
       transactions: [
@@ -331,9 +323,9 @@ export default new Vuex.Store({
 
   getters: {
 
-    // Get current cash balances
-    getDay: function (state) {
-      return state.day
+    // Get Balances
+    getBalances: function (state) {
+      return state.portfolio.balances
     },
 
     // Get current cash balances
@@ -341,9 +333,17 @@ export default new Vuex.Store({
       return state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1]
     },
 
-    // Get Balances
-    getBalances: function (state) {
-      return state.portfolio.balances
+    // Get current cash balances
+    getDay: function (state) {
+      return state.day
+    },
+
+    // Get current earnings amount
+    getEarnings: function (state) {
+      // Add the cash and holdings balance and then subtract the initial cash balance
+      return state.portfolio.balances.cash[state.portfolio.balances.cash.length - 1] +
+        state.portfolio.balances.holdings[state.portfolio.balances.holdings.length - 1] -
+        state.initial.cashBalance
     },
 
     // Get Balances

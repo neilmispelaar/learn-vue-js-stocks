@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full bg-blue-200 rounded-xl rounded-lg my-10 p-5">
+  <div class="w-full bg-blue-200 rounded-lg my-10 p-5">
     <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ name }}</h1>
     <p class="text-6xl font-thin"><span class="sr-only">Value </span>{{ value | formatCurrency }}</p>
     <p class="text-xs">{{ price | formatCurrency }} Share | QTY: {{ holding.quantity }}</p>
-    <div class="flex flex-wrap w-full mt-3 bg-blue-100 rounded p-4">
+    <div class="flex flex-wrap w-full mt-3 bg-blue-100 rounded-lg p-4">
       <div class="w-full">
         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
           Sell shares
