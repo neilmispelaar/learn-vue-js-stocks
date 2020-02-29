@@ -3,7 +3,9 @@
     <Header></Header>
     <div class="container w-3/5 mx-auto px-6">
       <main>
-        <router-view/>
+        <transition name="view" mode="out-in">
+          <router-view/>
+        </transition>
       </main>
     </div>
   </div>
@@ -14,6 +16,16 @@
 import Header from '@/components/Header.vue'
 
 export default {
+
+  data () {
+    return {
+    }
+  },
+
+  watch: {
+
+  },
+
   components: {
     Header
   },
@@ -25,6 +37,34 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
+.view-enter-active, .view-leave-active {
+  transition: all 0.2s ease-in;
+  transform: 0.2s ease;
+
+}
+
+/* Annimation start state */
+.view-enter, .view-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+
+}
+
+/* Final state */
+.view-enter-to {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.view-leave {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.view-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
 </style>
