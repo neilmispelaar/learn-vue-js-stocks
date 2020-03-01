@@ -1,6 +1,7 @@
 <template>
   <div class="portfolio">
     <PageHeading>Your Portfolio</PageHeading>
+    <h2 class="text-celadon-green text-xl font-extrabold border-b mt-0 mb-10">Dashboard</h2>
     <div class="bg-white p-6 mb-10 rounded-lg">
       <p class="text-celadon-green font-semibold text-sm">Your earnings: {{ earnings | formatCurrency }}</p>
       <div v-if="portfolioBalanceHistory.length <= 1"
@@ -43,8 +44,8 @@
       <p class="text-lg font-light">You don't own any stocks</p>
     </div>
     <div v-else>
-      <h2 class="text-celadon-green text-xl font-extrabold border-b my-0">Stocks</h2>
-      <div class="mt-10">
+      <h2 class="text-celadon-green text-xl font-extrabold border-b mt-0 mb-10">Stocks</h2>
+      <div>
         <PortfolioStock
           v-for="(holding, index) in holdings"
           v-bind:item="holding"
