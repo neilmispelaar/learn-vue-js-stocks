@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-orange-300 text-orange-900 rounded-xl rounded-lg my-5 p-3 md:p-5">
+  <div class="w-full bg-orange-300 text-orange-900 rounded-xl rounded-lg p-3 md:p-5">
     <div class="flex flex-row flex-no-wrap">
       <div class="w-1/2">
         <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>

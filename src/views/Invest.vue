@@ -13,20 +13,18 @@
       <p class="h3 mt-3">No Stocks</p>
     </div>
     <div v-else>
-      <div class="md:px-5">
-        <h2 class="text-celadon-green text-lg font-semibold">Available Stocks:</h2>
-        <!-- One columns -->
-        <div class="flex flex-col justify-between">
-          <Stock
-            v-for="(stock, index) in stocks"
-            v-bind:item="stock"
-            v-bind:index="index"
-            v-bind:key="index"
-            v-bind:stockId="stock.id"
-            v-bind:stockName="stock.name"
-            v-bind:stockPrices="stock.prices"
-          ></Stock>
-        </div>
+      <h2 class="mb-5 text-celadon-green text-lg font-semibold">Available Stocks:</h2>
+      <!-- Two column grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Stock
+          v-for="(stock, index) in stocks"
+          v-bind:item="stock"
+          v-bind:index="index"
+          v-bind:key="index"
+          v-bind:stockId="stock.id"
+          v-bind:stockName="stock.name"
+          v-bind:stockPrices="stock.prices"
+        ></Stock>
       </div>
     </div>
   </div>
