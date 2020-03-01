@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="antialiased">
     <Header></Header>
-    <div class="container w-3/5 mx-auto px-6">
+    <div class="container md:w-3/5 mx-auto px-6">
       <main>
         <transition name="view" mode="out-in">
           <router-view/>

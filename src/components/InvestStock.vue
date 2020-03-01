@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-orange-300 text-orange-900 rounded-xl rounded-lg my-5 p-5">
+  <div class="w-full bg-orange-300 text-orange-900 rounded-xl rounded-lg my-5 p-3 md:p-5">
     <div class="flex flex-row flex-no-wrap">
       <div class="w-1/2">
         <h1 class="text-xl font-extrabold"><span class="sr-only">Stock name: </span>{{ stockName }}</h1>
@@ -19,18 +19,16 @@
         </trend>
       </div>
     </div>
-    <div class="flex flex-wrap w-full mt-3 bg-orange-200 rounded p-4">
+    <div class="flex flex-col bg-orange-200 rounded-lg p-3 md:p-4 mt-2">
       <div class="w-full">
         <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
           Buy shares
         </label>
       </div>
-      <div class="flex-grow mr-3">
+      <div class="flex flex-row flex-no-wrap">
         <input v-model="quantity" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" placeholder="0" min="0" >
-      </div>
-      <div class="self-center">
         <button
-          class="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-8 rounded"
+          class="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-8 rounded ml-2 md:ml-4"
           :disabled="disabled"
           v-on:click="buyShares">
           Buy

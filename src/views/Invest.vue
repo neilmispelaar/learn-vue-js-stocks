@@ -13,7 +13,7 @@
       <p class="h3 mt-3">No Stocks</p>
     </div>
     <div v-else>
-      <div class="px-5">
+      <div class="md:px-5">
         <h2 class="text-celadon-green text-lg font-semibold">Available Stocks:</h2>
         <!-- One columns -->
         <div class="flex flex-col justify-between">

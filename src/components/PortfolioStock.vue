@@ -10,21 +10,20 @@
           <p class="text-6xl font-thin text-right"><span class="sr-only">Value </span>{{ value | formatCurrency }}</p>
         </div>
       </div>
-      <div class="flex flex-wrap w-full mt-3 bg-blue-100 rounded-lg p-4">
+      <div class="flex flex-col bg-blue-100 rounded-lg p-3 md:p-4 mt-2">
         <div class="w-full">
           <label class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2" for="grid-first-name">
             Sell shares
           </label>
         </div>
-        <div class="flex-grow mr-3">
-          <input v-model="quantity" class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" placeholder="0" min="0" :max="holding.quantity">
-        </div>
-        <div class="self-center">
+        <div class="flex flex-row flex-no-wrap">
+          <input v-model="quantity" class=" flex-grow-0 appearance-none block w-full bg-grey-lighter text-grey-darker border border-red rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="number" placeholder="0" min="0" :max="holding.quantity">
           <button
-          class="bg-red-600 hover:bg-red-800 text-white font-bold py-3 px-8 rounded"
-          :disabled="disabled"
-          v-on:click="sellStocks">
-          Sell</button>
+            class="bg-red-600 hover:bg-red-800 text-white font-bold py-3 px-8 rounded ml-2 md:ml-4"
+            :disabled="disabled"
+            v-on:click="sellStocks">
+            Sell
+          </button>
         </div>
       </div>
     </div>
